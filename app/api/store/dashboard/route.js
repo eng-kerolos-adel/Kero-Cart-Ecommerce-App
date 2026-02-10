@@ -32,7 +32,7 @@ export async function GET(request) {
       ),
       totalProducts: products.length,
     };
-    return NextResponse.json(dashboardData);
+    return NextResponse.json({ dashboardData });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
