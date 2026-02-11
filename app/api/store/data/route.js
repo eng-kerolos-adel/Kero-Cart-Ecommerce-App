@@ -22,7 +22,7 @@ export async function GET(request) {
     if (!store) {
       return NextResponse.json({ error: "Store not found" }, { status: 400 });
     }
-    return NextResponse.json(store);
+    return NextResponse.json({ store });
   } catch (error) {
     return NextResponse.json(
       { error: error.code || error.message },

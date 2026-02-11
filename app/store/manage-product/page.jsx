@@ -24,21 +24,36 @@ export default function StoreManageProducts() {
           Authorization: `Bearer ${token}`,
         },
       });
-      setProducts(data.products.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+      setProducts(
+        data.products.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+        ),
+      );
     } catch (error) {
-			toast.error(error?.response?.data?.error || error.message);
-		}
+      toast.error(error?.response?.data?.error || error.message);
+    }
     setLoading(false);
   };
 
   const toggleStock = async (productId) => {
     try {
       const token = await getToken();
-      const { data } = await axios.post("/api/store/stock-toggle", { productId }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const { data } = await axios.post(
+        "/api/store/stock-toggle",
+        { productId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
+      setProducts((prevProducts) =>
+        prevProducts.map((product) =>
+          product.id === productId
+            ? { ...product, inStock: !product.inStock }
+            : product,
+        ),
+      );
       toast.success(data.message);
       fetchProducts(); // Refresh the product list after toggling stock
     } catch (error) {
@@ -48,8 +63,8 @@ export default function StoreManageProducts() {
 
   useEffect(() => {
     if (user) {
-			fetchProducts();
-		}
+      fetchProducts();
+    }
   }, [user]);
 
   if (loading) return <Loading />;
